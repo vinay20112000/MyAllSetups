@@ -1,0 +1,83 @@
+ANSIBLE
+-------------
+
+sudo dnf install python3-pip -y
+sudo dnf install ansible -y
+ansible --version
+
+hostnamectl set-hostname Master
+passwd root
+
+vi /etc/ssh/sshd_config
+
+:40
+yes
+:65
+yes
+
+grep -E 'PermitRootLogin|PasswordAuthentication' /etc/ssh/sshd_config
+
+systemctl restart sshd
+- - - - - - -
+sudo vi /etc/ansible/ansible.cfg
+
+[defaults]
+inventory = /etc/ansible/hosts
+remote_user = root
+host_key_checking = False
+
+sudo vi /etc/ansible/hosts
+
+[dev]
+172.31.16.69
+[test]
+172.31.24.122
+[prod]
+172.31.22.13
+
+ansible --version
+ansible all --list-hosts
+
+cd
+ssh-keygen
+enter enter enter
+ssh-copy-id root@slave1 pvt ip
+ssh-copy-id root@slave2 pvt ip
+ssh-copy-id root@slave3 pvt ip
+
+ansible dev -m ping
+ansible test -m ping
+ansible prod -m ping
+ansible all -m ping
+
+execute in root/master
+
+vim pb1.yaml
+
+---
+- hosts: dev
+  connection: ssh
+  
+  tasks:
+    - name: Installing Git
+	  dnf: name=git state=present
+...
+
+ansible-playbook pb1.yaml
+
+
+---
+- hosts: dev
+  connection: ssh
+  
+  vars:
+    tool1: git
+	tool2: java-21-amazon-corretto
+  
+  tasks:
+    - name: Installing Git
+	  dnf: name={{tool1}} state=present
+  tasks:
+    - name: Installing Java
+	  dnf: name={{tool2}} state=present
+...
