@@ -1,0 +1,31 @@
+DOCKER_COMPOSE
+--------------
+# Remove old/broken installations (cleanup)
+sudo rm -f /usr/local/bin/docker-compose
+sudo rm -f /usr/bin/docker-compose
+
+sudo rm -f /usr/local/lib/docker/cli-plugins/docker-compose
+sudo rm -f /usr/local/lib/docker/cli-plugins/docker-buildx
+
+rm -f ~/.docker/cli-plugins/docker-buildx
+rm -f ~/.docker/cli-plugins/docker-compose
+
+
+#Create Docker plugin directory
+sudo mkdir -p /usr/local/lib/docker/cli-plugins
+
+#Install Docker Compose V2
+sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+-o /usr/local/lib/docker/cli-plugins/docker-compose
+
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+#Install Docker Buildx
+sudo curl -SL https://github.com/docker/buildx/releases/download/v0.17.1/buildx-v0.17.1.linux-amd64 \
+-o /usr/local/lib/docker/cli-plugins/docker-buildx
+
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-buildx
+
+docker compose version
+docker buildx version
+docker buildx ls
